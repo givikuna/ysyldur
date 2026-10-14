@@ -103,12 +103,14 @@ In your `flake.nix` file:
 You can now import `ysyldur` into any NixOS module:
 
 ```nix
-{ pkgs, ysyldur, lib, ... }:
+{ pkgs, lib, ... }:
 {
-  ysyldur = {
+  ysyldur = { # this is available everywhere
     boot.packages.variant = "zen";
     boot.sysctl.profiles.gaming-minotaur.enable = true;
   };
+
+  # bunch of stuff
 }
 ```
 

@@ -13,7 +13,7 @@ in
     ysyldur.boot.sysctl.params = {
       vm.swappiness = lib.mkDefault 10;
       vm.vfs_cache_pressure = lib.mkDefault 50;
-      kernel.split_lock_mitigate = lib.mkDefault 0;
+      # kernel.split_lock_mitigate = lib.mkDefault 0;
       kernel.nmi_watchdog = lib.mkDefault 0;
     };
   };
