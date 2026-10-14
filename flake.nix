@@ -13,5 +13,22 @@
       chaotic,
       ...
     }:
-    { };
+    let
+      ysyldur-mod = import ./modules/default.nix { inherit self chaotic; };
+    in
+    {
+      nixosModules = {
+        default = ysyldur-mod;
+        ysyldur = ysyldur-mod;
+
+        withChaotic = {
+          imports = [
+            chaotic.nixosModules.default
+            ysyldur-mod
+          ];
+        };
+      };
+
+      overlays.default = chaotic.overlays.default;
+    };
 }
