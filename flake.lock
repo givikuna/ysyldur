@@ -56,21 +56,6 @@
         "type": "github"
       }
     },
-    "mk-script": {
-      "locked": {
-        "lastModified": 1791945913,
-        "narHash": "sha256-pItCgq4jo8VZXfOGmekUOzHu/kA7QewXOfrj0tXSlek=",
-        "owner": "givikuna",
-        "repo": "nix-mkScript",
-        "rev": "c7093e3e5bfcef5c3ec7f3e9662a54f87733bcfd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "givikuna",
-        "repo": "nix-mkScript",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1791734076,
@@ -120,7 +105,6 @@
     "root": {
       "inputs": {
         "chaotic": "chaotic",
-        "mk-script": "mk-script",
         "nixpkgs": "nixpkgs_2",
         "nixtest": "nixtest"
       }
