@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.ysyldur.chaotic;
-  select-variant = config.ysyldur.boot.packages.select-variantName;
+  select-variant = config.ysyldur.boot.packages.selectedVariantName;
 
   uses-cachy-variant = select-variant != null && lib.hasPrefix "cachyos" select-variant;
 

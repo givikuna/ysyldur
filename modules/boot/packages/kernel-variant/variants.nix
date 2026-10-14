@@ -2,7 +2,6 @@
 {
   # standard nixpkgs
   default = pkgs.linuxPackages;
-  hardened = pkgs.linuxPackages_hardened;
   latest = pkgs.linuxPackages_latest;
   libre = pkgs.linuxPackages-libre;
   testing = pkgs.linuxPackages_testing;
@@ -39,5 +38,4 @@
 
   # xen_dom0
   xen_dom0 = pkgs.linuxPackages_xen_dom0;
-  xen_dom0-hardened = pkgs.linuxPackages_xen_dom0_hardened;
 }

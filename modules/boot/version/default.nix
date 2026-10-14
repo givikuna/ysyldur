@@ -40,11 +40,6 @@ let
       null
     else if chosen-variant == null || chosen-variant == "default" then
       "linuxPackages_${chosen-version}"
-    else if chosen-variant == "hardened" then
-      if chosen-version == "latest" then
-        "linuxPackages_latest_hardened"
-      else
-        "linuxPackages_${chosen-version}_hardened"
     else if chosen-variant == "rt" then
       if chosen-version == "latest" then
         "linuxPackages-rt_latest"
@@ -54,8 +49,6 @@ let
       "linuxPackages_latest-libre"
     else if chosen-variant == "xen_dom0" && chosen-version == "latest" then
       "linuxPackages_latest_xen_dom0"
-    else if chosen-variant == "xen_dom0-hardened" && chosen-version == "latest" then
-      "linuxPackages_latest_xen_dom0_hardened"
     else if chosen-variant == "xanmod-default" && chosen-version == "latest" then
       "linuxPackages_xanmod_latest"
     else
@@ -64,13 +57,18 @@ let
   resolved-package-set =
     if chosen-version != null then
       if resolved-attr-name != null && (pkgs ? ${resolved-attr-name}) then
-        pkgs.${resolved-attr-name}
+        let
+          attempted = builtins.tryEval (
+            builtins.seq pkgs.${resolved-attr-name}.kernel pkgs.${resolved-attr-name}
+          );
+        in
+        if attempted.success then attempted.value else null
       else
         null
     else
       pCfg.resolvedBaseKernelPackages;
 
-  is-active = chosen-variant != null || chosen-version != null;
+  is-active = chosen-variant != null || version-count > 0;
 in
 {
   options.ysyldur.boot.version = {
@@ -106,6 +104,13 @@ in
         assertion =
           chosen-version == null || (resolved-attr-name != null && (pkgs ? ${resolved-attr-name}));
         message = "ysyldur: kernel package set `pkgs.${toString resolved-attr-name}` does not exist in your current nixpkgs.";
+      }
+      {
+        assertion = chosen-version == null || resolved-package-set != null;
+        message =
+          "ysyldur: kernel package set `pkgs.${toString resolved-attr-name}` is "
+          + "not usable in your current nixpkgs. nixpkgs may expose the attribute "
+          + "name but throw on evaluation.";
       }
     ];
 

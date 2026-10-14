@@ -4,17 +4,36 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    nixtest.url = "gitlab:TECHNOFAB/nixtest?dir=lib";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+
+      nixtest,
       ...
     }@inputs:
     let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
       chaotic = inputs.chaotic or null;
       ysyldur-mod = import ./modules/default.nix { inherit self chaotic; };
+
+      nixtestRunner = import ./tests/default.nix {
+        inherit
+          inputs
+          pkgs
+          self
+          chaotic
+          ;
+      };
     in
     {
       nixosModules = {
@@ -32,6 +51,17 @@
 
       overlays = nixpkgs.lib.optionalAttrs (chaotic != null) {
         default = chaotic.overlays.default;
+      };
+
+      packages.${system} = {
+        tests = nixtestRunner;
+      };
+
+      checks.${system} = {
+        tests = pkgs.runCommand "ysyldur-tests" { } ''
+          ${nixtestRunner}/bin/nixtest
+          touch $out
+        '';
       };
     };
 }

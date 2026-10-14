@@ -1,8 +1,8 @@
 {
-  lib,
   chaotic ? null,
   ...
 }:
+{ lib, ... }:
 {
   imports = [
     ./chaotic
