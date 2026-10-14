@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   chaotic ? null,
   ...
 }:
@@ -12,18 +11,12 @@ in
   options.ysyldur.chaotic = {
     autoOverlay = lib.mkOption {
       type = lib.types.bool;
-
       default = true;
-
-      description = "inject Chaotic-Nyx overlay if CachyOS kernels are missing from pkgs";
+      description = "inject Chaotic-Nyx overlay so CachyOS kernel packages are available in pkgs.";
     };
   };
 
-  config =
-    let
-      has-cachy-in-pkgs = pkgs ? linuxPackages_cachyos;
-    in
-    lib.mkIf (cfg.autoOverlay && !has-cachy-in-pkgs && chaotic != null) {
-      nixpkgs.overlays = [ chaotic.overlays.default ];
-    };
+  config = lib.mkIf (cfg.autoOverlay && chaotic != null) {
+    nixpkgs.overlays = [ chaotic.overlays.default ];
+  };
 }

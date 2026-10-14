@@ -23,30 +23,38 @@ let
   ) variantNames;
 
   shorthand = config.ysyldur.boot.packages.variant;
-  normalizedShorthand = if shorthand == null then null else lib.removeSuffix "-kernel" shorthand;
 
-  selectedVariants =
-    enabledByToggle ++ lib.optional (normalizedShorthand != null) normalizedShorthand;
+  selectedVariants = enabledByToggle ++ lib.optional (shorthand != null) shorthand;
 
   uniqueSelected = lib.unique selectedVariants;
   count = lib.length uniqueSelected;
+  chosenName = if count == 1 then lib.head uniqueSelected else null;
 in
 {
   options.ysyldur.boot.packages = {
     variant = lib.mkOption {
-      type = lib.types.nullOr (
-        lib.types.enum (variantNames ++ map (name: "${name}-kernel") variantNames)
-      );
+      type = lib.types.nullOr (lib.types.enum variantNames);
       default = null;
+      example = "cachyos-lts";
       description = "shorthand kernel variant selector (e.g. \"cachyos-lts\" or \"zen\").";
     };
 
     kernel-variant = variantOpts;
 
+    selectedVariantName = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      internal = true;
+      readOnly = true;
+      default = chosenName;
+      description = "internal resolved name of the active variant, or null if none was explicitly chosen.";
+    };
+
     resolvedBaseKernelPackages = lib.mkOption {
       type = lib.types.raw;
       internal = true;
-      default = if count == 1 then variants.${lib.head uniqueSelected} else variants.default;
+      readOnly = true;
+      default = if chosenName != null then variants.${chosenName} else variants.default;
+      description = "internal resolved base kernelPackages set before version overrides.";
     };
   };
 

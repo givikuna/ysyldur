@@ -5,7 +5,9 @@
     ./packages
     ./modules
     ./config
-    ./param
+    ./params
     ./sysctl
+    ./io-scheduler
+    ./coredump
   ];
 }

@@ -1,16 +1,15 @@
 {
-  # self,
-  chaotic,
+  lib,
+  chaotic ? null,
   ...
 }:
 {
-  _ableToUseChaotic = chaotic;
-
   imports = [
     ./chaotic
     ./boot
     ./drivers
-    ./params
     ./services
   ];
+
+  config._module.args.chaotic = lib.mkDefault chaotic;
 }

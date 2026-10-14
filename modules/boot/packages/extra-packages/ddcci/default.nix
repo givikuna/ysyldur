@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.ysyldur.boot.packages.packages.ddcci;
+  cfg = config.ysyldur.boot.packages.extra-packages.ddcci;
 in
 {
-  options.ysyldur.boot.packages.packages.ddcci.enable =
+  options.ysyldur.boot.packages.extra-packages.ddcci.enable =
     lib.mkEnableOption "ddcci-driver external monitor brightness kernel module";
 
   config = lib.mkIf cfg.enable {

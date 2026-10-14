@@ -1,14 +1,10 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
-  cfg = config.ysyldur.boot.packages.packages.bbswitch;
+  cfg = config.ysyldur.boot.packages.extra-packages.bbswitch;
 in
 {
-  options.ysyldur.boot.packages.packages.bbswitch = {
-    enable = lib.mkEnableOption "bbswitch Kernel Package";
+  options.ysyldur.boot.packages.extra-packages.bbswitch = {
+    enable = lib.mkEnableOption "bbswitch kernel package";
     loadModule = lib.mkOption {
       type = lib.types.bool;
       default = true;

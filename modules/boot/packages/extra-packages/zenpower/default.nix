@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.ysyldur.boot.packages.packages.zenpower;
+  cfg = config.ysyldur.boot.packages.extra-packages.zenpower;
 in
 {
-  options.ysyldur.boot.packages.packages.zenpower.enable =
+  options.ysyldur.boot.packages.extra-packages.zenpower.enable =
     lib.mkEnableOption "zenpower AMD Ryzen sensor kernel module (blacklists k10temp)";
 
   config = lib.mkIf cfg.enable {

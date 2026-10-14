@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.ysyldur.boot.packages.packages.evdi;
+  cfg = config.ysyldur.boot.packages.extra-packages.evdi;
 in
 {
-  options.ysyldur.boot.packages.packages.evdi.enable =
+  options.ysyldur.boot.packages.extra-packages.evdi.enable =
     lib.mkEnableOption "EVDI DisplayLink kernel module";
 
   config = lib.mkIf cfg.enable {
