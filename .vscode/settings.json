@@ -58,6 +58,7 @@
     "syncookies",
     "syscalls",
     "tickless",
+    "tinyconfig",
     "uhid",
     "uinput",
     "usbhid",

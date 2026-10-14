@@ -10,17 +10,18 @@
     {
       self,
       nixpkgs,
-      chaotic,
       ...
-    }:
+    }@inputs:
     let
+      chaotic = inputs.chaotic or null;
       ysyldur-mod = import ./modules/default.nix { inherit self chaotic; };
     in
     {
       nixosModules = {
         default = ysyldur-mod;
         ysyldur = ysyldur-mod;
-
+      }
+      // nixpkgs.lib.optionalAttrs (chaotic != null) {
         withChaotic = {
           imports = [
             chaotic.nixosModules.default
@@ -29,6 +30,8 @@
         };
       };
 
-      overlays.default = chaotic.overlays.default;
+      overlays = nixpkgs.lib.optionalAttrs (chaotic != null) {
+        default = chaotic.overlays.default;
+      };
     };
 }

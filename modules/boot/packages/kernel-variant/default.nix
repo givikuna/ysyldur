@@ -11,7 +11,7 @@ let
   variantOpts = lib.mapAttrs (name: pkg: {
     enable = lib.mkEnableOption "the ${name} kernel variant";
     package = lib.mkOption {
-      type = lib.types.raw;
+      type = lib.types.nullOr lib.types.raw;
       readOnly = true;
       default = pkg;
       description = "the kernel package set for ${name}.";
@@ -50,11 +50,11 @@ in
     };
 
     resolvedBaseKernelPackages = lib.mkOption {
-      type = lib.types.raw;
+      type = lib.types.nullOr lib.types.raw;
       internal = true;
       readOnly = true;
       default = if chosenName != null then variants.${chosenName} else variants.default;
-      description = "internal resolved base kernelPackages set before version overrides.";
+      description = "internal resolved base kernelPackages set before version selection.";
     };
   };
 
@@ -64,6 +64,10 @@ in
         assertion = count <= 1;
         message = "ysyldur: only one kernel variant can be enabled at a time (found: ${builtins.toJSON uniqueSelected}).";
       }
-    ];
+    ]
+    ++ lib.optional (chosenName != null && config.ysyldur.boot.version.selectedVersion == null) {
+      assertion = variants.${chosenName} != null;
+      message = "ysyldur: kernel variant '${chosenName}' is not available in `pkgs` (if this is a CachyOS kernel, ensure Chaotic-Nyx is enabled).";
+    };
   };
 }
