@@ -1,10 +1,13 @@
 {
-  description = "ysyldur - nix flake for managing kernel variant, version, and options";
+  description = "ysyldur - nix flake for kernel mgmt";
 
   inputs = {
+    # prod
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
+    # dev
+    mk-script.url = "github:givikuna/nix-mkScript";
     nixtest.url = "gitlab:TECHNOFAB/nixtest?dir=lib";
   };
 
@@ -14,6 +17,7 @@
       nixpkgs,
 
       nixtest,
+      mk-script,
       ...
     }@inputs:
     let
@@ -33,6 +37,13 @@
           self
           chaotic
           ;
+      };
+
+      mkScript = mk-script.lib.mkScript pkgs {
+        src = ./.;
+        env = {
+          NIXTEST_BIN = "${nixtestRunner}/bin/nixtest";
+        };
       };
     in
     {
@@ -54,7 +65,7 @@
       };
 
       packages.${system} = {
-        tests = nixtestRunner;
+        tests = mkScript "tests" "scripts/ysyldur-test.sh";
       };
 
       checks.${system} = {
