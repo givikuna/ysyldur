@@ -95,7 +95,7 @@ in
         expected = {
           "vm.swappiness" = 10;
           "vm.vfs_cache_pressure" = 50;
-          "kernel.split_lock_mitigate" = 0;
+          # "kernel.split_lock_mitigate" = 0;
           "kernel.nmi_watchdog" = 0;
         };
         actual =

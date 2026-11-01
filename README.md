@@ -217,7 +217,7 @@ Pin a specific kernel version from nixpkgs alongside a variant:
 
 ```nix
 ysyldur.boot.version.version = "6.6";     # dotted form
-ysyldur.boot.version.version = "6.6";     # underscore form also accepted
+ysyldur.boot.version.version = "6_6";     # underscore form also accepted
 ysyldur.boot.version.versions."6_6".enable = true;  # toggle form
 ```
 
@@ -386,9 +386,9 @@ All kernel params are appended to `boot.kernelParams`. Options are grouped per f
 #### `ysyldur.boot.params` (graphics)
 
 | Option               | Values        | Emits                                                          |
-| -------------------- | ------------- | -------------------------------------------------------------- | --- |
-| `nvidia_drm_modeset` | `nullOr bool` | `nvidia-drm.modeset=1                                          | 0`  |
-| `nvidia_drm_fbdev`   | `nullOr bool` | `nvidia-drm.fbdev=1                                            | 0`  |
+| -------------------- | ------------- | -------------------------------------------------------------- |
+| `nvidia_drm_modeset` | `nullOr bool` | `nvidia-drm.modeset=1`                                         |
+| `nvidia_drm_fbdev`   | `nullOr bool` | `nvidia-drm.fbdev=1`                                           |
 | `quietSplash`        | `bool`        | `quiet`, `splash`, `loglevel=3`, `rd.systemd.show_status=auto` |
 
 #### `ysyldur.boot.params` (IOMMU)
@@ -402,9 +402,9 @@ All kernel params are appended to `boot.kernelParams`. Options are grouped per f
 #### `ysyldur.boot.params` (memory / zswap)
 
 | Option                   | Values                                           | Emits                          |
-| ------------------------ | ------------------------------------------------ | ------------------------------ | --- |
+| ------------------------ | ------------------------------------------------ | ------------------------------ |
 | `transparent_hugepage`   | `always` \| `madvise` \| `never`                 | `transparent_hugepage=<value>` |
-| `zswap.enable`           | `nullOr bool`                                    | `zswap.enabled=1               | 0`  |
+| `zswap.enable`           | `nullOr bool`                                    | `zswap.enabled=1`              |
 | `zswap.compressor`       | `zstd` \| `lz4` \| `lzo` \| `lz4hc` \| `deflate` | `zswap.compressor=<value>`     |
 | `zswap.max_pool_percent` | `nullOr int`                                     | `zswap.max_pool_percent=<int>` |
 | `zswap.zpool`            | `zsmalloc` \| `zbud` \| `z3fold`                 | `zswap.zpool=<value>`          |
@@ -416,15 +416,15 @@ All kernel params are appended to `boot.kernelParams`. Options are grouped per f
 | `pcie_aspm`                           | `default` \| `powersave` \| `powersupersave` \| `performance` \| `off` \| `force` | `pcie_aspm=<value>`                         |
 | `nvme_core_default_ps_max_latency_us` | `nullOr int`                                                                      | `nvme_core.default_ps_max_latency_us=<int>` |
 
-Setting `nvme_core_default_ps_max_latency_us = 0` disables APST, which often fixes NVMe freeze issues.
+Setting `nvme_core_default_ps_max_latency_us = 0` disables APST, which usually should fix the NVMe freeze issues.
 
 #### `ysyldur.boot.params` (security)
 
 | Option          | Values                                     | Emits              |
-| --------------- | ------------------------------------------ | ------------------ | --- |
+| --------------- | ------------------------------------------ | ------------------ |
 | `lockdown`      | `none` \| `integrity` \| `confidentiality` | `lockdown=<value>` |
-| `init_on_alloc` | `nullOr bool`                              | `init_on_alloc=1   | 0`  |
-| `init_on_free`  | `nullOr bool`                              | `init_on_free=1    | 0`  |
+| `init_on_alloc` | `nullOr bool`                              | `init_on_alloc=1`  |
+| `init_on_free`  | `nullOr bool`                              | `init_on_free=1`   |
 | `slab_nomerge`  | `bool`                                     | `slab_nomerge`     |
 | `pti`           | `on` \| `off` \| `auto`                    | `pti=<value>`      |
 
@@ -481,12 +481,11 @@ Profiles are groups of `mkDefault` sysctls that you can override per-option by s
 
 **`gaming-minotaur` defaults:**
 
-| Sysctl                       | Value |
-| ---------------------------- | ----- |
-| `vm.swappiness`              | 10    |
-| `vm.vfs_cache_pressure`      | 50    |
-| `kernel.split_lock_mitigate` | 0     |
-| `kernel.nmi_watchdog`        | 0     |
+| Sysctl                  | Value |
+| ----------------------- | ----- |
+| `vm.swappiness`         | 10    |
+| `vm.vfs_cache_pressure` | 50    |
+| `kernel.nmi_watchdog`   | 0     |
 
 **`security-nomad` defaults:**
 
@@ -509,11 +508,13 @@ Profiles are groups of `mkDefault` sysctls that you can override per-option by s
 Writes udev rules (`services.udev.extraRules`) to set per-device `queue/scheduler`.
 
 ```nix
-ysyldur.boot.io-scheduler = {
-  nvme = "none";
-  ssd = "mq-deadline";
-  hdd = "bfq";
-};
+{
+  ysyldur.boot.io-scheduler = {
+    nvme = "none";
+    ssd = "mq-deadline";
+    hdd = "bfq";
+  };
+}
 ```
 
 | Option | Applies to                               | Values                                      |
@@ -524,10 +525,10 @@ ysyldur.boot.io-scheduler = {
 
 ### Core dumps (`ysyldur.boot.coredump`)
 
-| Option         | Type                    | Effect                                                   |
-| -------------- | ----------------------- | -------------------------------------------------------- | ------------------------------------------------ |
-| `disable`      | `bool`                  | Disables `systemd.coredump`, sets `kernel.core_pattern = | /bin/false`, and adds a PAM hard limit `core=0`. |
-| `suidDumpable` | `nullOr (enum [0 1 2])` | Sets `fs.suid_dumpable`.                                 |
+| Option         | Type                    | Effect                                                    |
+| -------------- | ----------------------- | --------------------------------------------------------- | ------------------------------------------------- |
+| `disable`      | `bool`                  | Disables `systemd.coredump`, sets `kernel.core_pattern =` | `/bin/false`, and adds a PAM hard limit `core=0`. |
+| `suidDumpable` | `nullOr (enum [0 1 2])` | Sets `fs.suid_dumpable`.                                  |
 
 ---
 
@@ -603,7 +604,7 @@ Below is a compact reference of every option exposed by `ysyldur.*`.
 
 ### `ysyldur.boot`
 
-```
+```nix
 ysyldur.boot.config.yes                      -> listOf str
 ysyldur.boot.config.no                       -> listOf str
 ysyldur.boot.config.module                   -> listOf str
@@ -699,7 +700,7 @@ ysyldur.boot.version.selectedVersion         -> readOnly nullOr str
 
 ### `ysyldur.drivers`
 
-```
+```nix
 ysyldur.drivers.amdgpu.enable                -> bool
 ysyldur.drivers.amdgpu.overdrive             -> bool
 
@@ -714,7 +715,7 @@ ysyldur.drivers.xpadneo.enable               -> bool
 
 ### `ysyldur.services.scx`
 
-```
+```nix
 ysyldur.services.scx.enable                  -> bool
 ysyldur.services.scx.extraArgs               -> listOf str
 ysyldur.services.scx.scheduler.<name>.enable -> bool
@@ -722,7 +723,7 @@ ysyldur.services.scx.scheduler.<name>.enable -> bool
 
 ### `ysyldur.chaotic`
 
-```
+```nix
 ysyldur.chaotic.enable                       -> bool
 ysyldur.chaotic.autoOverlay                  -> bool (default: true)
 ```
@@ -736,9 +737,15 @@ ysyldur.chaotic.autoOverlay                  -> bool (default: true)
 The flake ships with a nixtest suite covering every module:
 
 ```sh
+# for the flake itself
 nix flake check
-# or specifically
-nix build .#checks.x86_64-linux.tests
+
+# unit tests
+# specifically
+nix run .#checks.x86_64-linux.tests
+
+# generally
+nix run .#tests
 ```
 
 Tests live under `tests/` and cover boot config, coredump, extra packages, IO scheduler, kernel variants, modules, params, sysctl, version, drivers, scx, chaotic integration, and a full NixOS system integration test.

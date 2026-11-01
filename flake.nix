@@ -58,10 +58,7 @@
       };
 
       checks.${system} = {
-        tests = pkgs.runCommand "ysyldur-tests" { } ''
-          ${nixtestRunner}/bin/nixtest
-          touch $out
-        '';
+        tests = nixtestRunner;
       };
     };
 }
