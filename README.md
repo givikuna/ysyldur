@@ -528,7 +528,7 @@ Writes udev rules (`services.udev.extraRules`) to set per-device `queue/schedule
 | Option         | Type                    | Effect                                                    |
 | -------------- | ----------------------- | --------------------------------------------------------- | ------------------------------------------------- |
 | `disable`      | `bool`                  | Disables `systemd.coredump`, sets `kernel.core_pattern =` | `/bin/false`, and adds a PAM hard limit `core=0`. |
-| `suidDumpable` | `nullOr (enum [0 1 2])` | Sets `fs.suid_dumpable`.                                  |
+| `suidDumpable` | `nullOr (enum [0 1 2])` | Sets `fs.suid_dumpable`.                                  |                                                   |
 
 ---
 
