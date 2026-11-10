@@ -56,8 +56,8 @@ in
           {
             kernelPname = sys.config.boot.kernelPackages.kernel.pname;
             swappiness = sys.config.boot.kernel.sysctl."vm.swappiness";
-            scxEnabled = sys.config.services.scx.enable;
-            scxScheduler = sys.config.services.scx.scheduler;
+            scxEnabled = sys.config.services.scx-loader.enable;
+            scxScheduler = sys.config.services.scx-loader.config.default_sched;
             hasSplitLockParam = builtins.elem "split_lock_detect=off" sys.config.boot.kernelParams;
           };
       }

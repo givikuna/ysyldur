@@ -236,18 +236,14 @@ let
             type = lib.types.lines;
             default = "";
           };
-          scx = {
+          scx-loader = {
             enable = lib.mkOption {
               type = lib.types.bool;
               default = false;
             };
-            scheduler = lib.mkOption {
-              type = lib.types.str;
-              default = "scx_lavd";
-            };
-            extraArgs = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
+            config = lib.mkOption {
+              type = lib.types.attrsOf lib.types.unspecified;
+              default = { };
             };
           };
         };

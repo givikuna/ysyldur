@@ -1,4 +1,4 @@
-{ lib, helpers, ... }:
+{ helpers, ... }:
 let
   inherit (helpers) evalYsyldur;
 
@@ -16,11 +16,11 @@ let
   ];
 
   schedulerTests = map (sched: {
-    name = "scx.scheduler.${sched}.enable sets services.scx.scheduler = \"scx_${sched}\"";
+    name = "scx.scheduler.${sched}.enable sets services.scx-loader.config.default_sched = \"scx_${sched}\"";
     pos = __curPos;
     expected = {
       enable = true;
-      scheduler = "scx_${sched}";
+      config.default_sched = "scx_${sched}";
     };
     actual =
       let
@@ -30,10 +30,10 @@ let
               enable = true;
               scheduler.${sched}.enable = true;
             };
-          }).config.services.scx;
+          }).config.services.scx-loader;
       in
       {
-        inherit (scx) enable scheduler;
+        inherit (scx) enable config;
       };
   }) schedulers;
 in
@@ -52,12 +52,13 @@ in
           (evalYsyldur {
             ysyldur.services.scx = {
               enable = true;
+              scheduler.lavd.enable = true;
               extraArgs = [
                 "--autopower"
                 "--slice-us=5000"
               ];
             };
-          }).config.services.scx.extraArgs;
+          }).config.services.scx-loader.config.scx_lavd.auto_mode;
       }
       {
         name = "fails assertion when more than one scx scheduler is enabled";

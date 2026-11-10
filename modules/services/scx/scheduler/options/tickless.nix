@@ -7,6 +7,6 @@ in
     lib.mkEnableOption "scx tickless scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_tickless";
+    services.scx-loader.config.default_sched = "scx_tickless";
   };
 }

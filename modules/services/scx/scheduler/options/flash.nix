@@ -6,6 +6,6 @@ in
   options.ysyldur.services.scx.scheduler.flash.enable = lib.mkEnableOption "scx flash scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_flash";
+    services.scx-loader.config.default_sched = "scx_flash";
   };
 }

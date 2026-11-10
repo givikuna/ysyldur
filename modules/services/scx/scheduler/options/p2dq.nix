@@ -6,6 +6,6 @@ in
   options.ysyldur.services.scx.scheduler.p2dq.enable = lib.mkEnableOption "scx p2dq scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_p2dq";
+    services.scx-loader.config.default_sched = "scx_p2dq";
   };
 }

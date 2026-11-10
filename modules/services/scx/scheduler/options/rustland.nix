@@ -7,6 +7,6 @@ in
     lib.mkEnableOption "scx rustland scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_rustland";
+    services.scx-loader.config.default_sched = "scx_rustland";
   };
 }

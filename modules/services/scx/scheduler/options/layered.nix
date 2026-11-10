@@ -6,6 +6,6 @@ in
   options.ysyldur.services.scx.scheduler.layered.enable = lib.mkEnableOption "scx layered scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_layered";
+    services.scx-loader.config.default_sched = "scx_layered";
   };
 }

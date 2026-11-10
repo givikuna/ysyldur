@@ -14,7 +14,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.scx.enable = true;
-    services.scx.extraArgs = lib.mkIf (cfg.extraArgs != [ ]) cfg.extraArgs;
+    services.scx-loader.enable = true;
   };
 }

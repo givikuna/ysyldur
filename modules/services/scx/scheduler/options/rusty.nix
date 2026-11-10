@@ -6,6 +6,6 @@ in
   options.ysyldur.services.scx.scheduler.rusty.enable = lib.mkEnableOption "scx rusty scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_rusty";
+    services.scx-loader.config.default_sched = "scx_rusty";
   };
 }

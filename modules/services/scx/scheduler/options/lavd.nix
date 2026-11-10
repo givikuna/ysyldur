@@ -6,6 +6,6 @@ in
   options.ysyldur.services.scx.scheduler.lavd.enable = lib.mkEnableOption "scx lavd scheduler";
 
   config = lib.mkIf cfg.enable {
-    services.scx.scheduler = "scx_lavd";
+    services.scx-loader.config.default_sched = "scx_lavd";
   };
 }

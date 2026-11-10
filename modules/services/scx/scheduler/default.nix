@@ -14,6 +14,8 @@ let
     "tickless"
   ];
   enabledScheds = lib.filter (name: schedCfg.${name}.enable) schedNames;
+  activeSched = if enabledScheds != [ ] then "scx_${lib.head enabledScheds}" else null;
+  extraArgs = config.ysyldur.services.scx.extraArgs;
 in
 {
   imports = [
@@ -29,10 +31,18 @@ in
     ./options/tickless.nix
   ];
 
-  config.assertions = [
+  config = lib.mkMerge [
     {
-      assertion = (lib.length enabledScheds) <= 1;
-      message = "ysyldur: only one scx scheduler may be enabled at a time (enabled: ${builtins.toJSON enabledScheds}).";
+      assertions = [
+        {
+          assertion = (lib.length enabledScheds) <= 1;
+          message = "ysyldur: only one scx scheduler may be enabled at a time (enabled: ${builtins.toJSON enabledScheds}).";
+        }
+      ];
     }
+
+    (lib.mkIf (activeSched != null && extraArgs != [ ]) {
+      services.scx-loader.config.${activeSched}.auto_mode = extraArgs;
+    })
   ];
 }
